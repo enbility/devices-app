@@ -1,0 +1,125 @@
+/* ==========================================================================
+Section Styles
+========================================================================== */
+
+//Sections
+.section {
+    padding-bottom: 2rem !important;
+    
+    &.section-light-grey {
+        background-color: $light-grey;
+    }
+    &.section-feature-grey {
+        background-color: $section-grey;
+    }
+    &.section-secondary {
+        background-color: $secondary;
+    }
+    &.section-blue-grey {
+        background-color: $blue-grey;
+    }
+    &.section-half {
+        height: 75vh !important;
+    }
+    .title, .subtitle {
+        font-family: 'Open Sans', sans-serif;
+
+    }
+    .subtitle {
+        &.is-muted {
+            color: $muted-grey;
+        }
+    }
+
+    .content .svg-250 {
+        max-width: 250px !important;
+        height: auto;
+    }
+}
+
+//Titles
+.title-wrapper {
+    max-width: 500px;
+    margin: 0 auto;
+    .title, .subtitle {
+        font-family: 'Open Sans', sans-serif;
+
+    }
+    .subtitle {
+        &.is-muted {
+            color: $muted-grey;
+        }
+    }
+}
+
+//Divider
+.divider {
+    height: 3px;
+    border-radius: 50px;
+    background: $secondary;
+    width: 60px;
+    &.is-centered {
+        margin: 0 auto;
+    }
+}
+
+//Wrapper
+.content-wrapper {
+    padding: 60px 0;
+}
+
+
+//Pulled image
+img.pushed-image {
+    margin-top: -5vh;
+}
+
+//Icon box
+.media.icon-box {
+    border-top: none !important;
+    .media-content .content {
+        span {
+            display: block;
+        }
+        .icon-box-title {
+            color: $blue-grey;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .icon-box-text {
+            color: $title-grey;
+            font-size: 1rem;
+            font-weight: 400;
+        }
+    }
+}
+
+//List box
+.media.list-box {
+    border-top: none !important;
+    .media-content .content {
+        div {
+            display: block;
+        }
+        .list-box-title {
+            color: $blue-grey;
+            font-size: 1.6rem;
+            font-weight: 600;
+        }
+        .list-box-subtitle {
+            color: $blue-grey;
+            font-size: 1.2rem;
+            font-weight: 400;
+        }
+        .list-box-text {
+            color: $medium-grey;
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .list-box-text a {
+            color: $dark-grey;
+            font-weight: 600;
+        }
+    }
+}
