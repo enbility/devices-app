@@ -8,13 +8,20 @@ Another goal is to provide an executable for every supported platform that conta
 
 The service requires a certificate and a key which will be created automatically and saved in the working folder if file names are not provided or the default filenames are not found.
 
+## First steps
+
+- Download and install [golang](https://go.dev) for your computer
+- Download and install [NodeJS and NPM](https://nodejs.org/) if you do not already have it
+- Download the source code of this repository
+- Run `npm install` inside the root repository folder
+- Now follow either the `Development` or `Build binary` steps
+
 ## Development
 
 ### Running the server component
 
-`go run main.go -h` to see all the possible parameters.
-
-`go run main.go` to start with the default parameters.
+- `go run main.go -h` to see all the possible parameters.
+- `go run main.go` to start with the default parameters.
 
 ### Running the web frontend
 
