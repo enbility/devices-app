@@ -1,8 +1,10 @@
 package main
 
 import (
+	"embed"
 	"flag"
 	"fmt"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
@@ -13,6 +15,9 @@ import (
 	"github.com/enbility/devices-app/app"
 	"github.com/gorilla/websocket"
 )
+
+//go:embed dist
+var web embed.FS
 
 const (
 	httpdPort int = 7050
@@ -25,18 +30,6 @@ var upgrader = websocket.Upgrader{
 		// allow connection from any host
 		return true
 	},
-}
-
-func serveHome(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/" {
-		http.Error(w, "Not found", http.StatusNotFound)
-		return
-	}
-	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-	http.ServeFile(w, r, "home.html")
 }
 
 func serveWs(cem *app.Cem, w http.ResponseWriter, r *http.Request) {
@@ -87,7 +80,11 @@ func main() {
 	hems := app.NewHems()
 	hems.Run()
 
-	http.HandleFunc("/", serveHome)
+	serverRoot, err := fs.Sub(web, "dist")
+	if err != nil {
+		log.Fatal(err)
+	}
+	http.Handle("/", http.FileServer(http.FS(serverRoot)))
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hems, w, r)
 	})

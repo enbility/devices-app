@@ -19,3 +19,10 @@ The service requires a certificate and a key which will be created automatically
 ### Running the web frontend
 
 `npx vite dev` to start with the default parameters using `vite.config.js`. The web service is now accessible at `http://localhost:7051/`
+
+## Build binary
+
+- `make ui` for creating the UI assets
+- `make build` for building the binary for the local system
+- execute the binary with `./desktop-app`
+- Open the website in a browser at `http://localhost:7050/`
