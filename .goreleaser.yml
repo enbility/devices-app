@@ -1,0 +1,46 @@
+dist: release
+release:
+  github:
+    owner: enbility
+    name: desktop-app
+
+builds:
+  - id: desktop-app
+    main: main.go
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm
+      - arm64
+    goarm:
+      - "6"
+    ignore:
+      - goos: windows
+        goarch: arm
+      - goos: windows
+        goarch: arm64
+
+archives:
+  - builds:
+      - desktop-app
+    format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - LICENSE
+      - README.md
+    name_template: >-
+      {{ .ProjectName }}_{{ .Version }}_{{ if eq .Os "darwin" }}macOS{{ else }}{{ .Os }}{{ end }}-{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}
+
+universal_binaries:
+  - replace: true
+
+checksum:
+  name_template: "checksums.txt"
+
+snapshot:
+  name_template: "{{.ShortCommit}}"

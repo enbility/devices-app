@@ -8,3 +8,6 @@ ui::
 
 build::
 	go build
+
+snapshot::
+	goreleaser --snapshot --skip-publish --clean

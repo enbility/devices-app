@@ -33,3 +33,25 @@ The service requires a certificate and a key which will be created automatically
 - `make build` for building the binary for the local system
 - execute the binary with `./desktop-app`
 - Open the website in a browser at `http://localhost:7050/`
+
+## Usage
+
+```sh
+General Usage:
+  devices-app <httpd-port> <eebus-port> <crtfile> <keyfile> <serial>
+    <httpd-port> Optional port for the HTTPD server
+    <eebus-port> Optional port for the EEBUS service
+    <crt-file>   Optional filepath for the cert file
+    <key-file>   Option filepath for the key file
+    <serial>     Option mDNS serial string
+
+Default values:
+  httpd-port: 7050
+  eebus-port: 4815
+  crt-file:   cert.crt (same folder as executable)
+  key-file:   cert.key (same folder as executable)
+  serial:     123456789
+
+If no cert-file or key-file parameters are provided and
+the files do not exist, they will be created automatically.
+```

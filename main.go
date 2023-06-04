@@ -45,7 +45,7 @@ func serveWs(cem *app.Cem, w http.ResponseWriter, r *http.Request) {
 
 func usage() {
 	fmt.Println("General Usage:")
-	fmt.Println("  devicesapp <httpd-port> <eebus-port> <crtfile> <keyfile> <serial>")
+	fmt.Println("  devices-app <httpd-port> <eebus-port> <crtfile> <keyfile> <serial>")
 	fmt.Println("    <httpd-port> Optional port for the HTTPD server")
 	fmt.Println("    <eebus-port> Optional port for the EEBUS service")
 	fmt.Println("    <crt-file>   Optional filepath for the cert file")
