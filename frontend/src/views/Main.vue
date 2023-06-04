@@ -24,7 +24,7 @@ import imageUrl from '../assets/logo_white.svg'
   <div class="container mt-50">
     <div class="content has-text-center" v-show="!isOnline">
       <div class="notification is-danger is-light">
-        Server connection is lost. Please check that Desktop-App is still running.
+        Server connection is lost. Please check that Devices-App is still running.
       </div>
     </div>
 

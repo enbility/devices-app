@@ -2,10 +2,10 @@ dist: release
 release:
   github:
     owner: enbility
-    name: desktop-app
+    name: devices-app
 
 builds:
-  - id: desktop-app
+  - id: devices-app
     main: main.go
     goos:
       - linux
@@ -25,7 +25,7 @@ builds:
 
 archives:
   - builds:
-      - desktop-app
+      - devices-app
     format: tar.gz
     format_overrides:
       - goos: windows

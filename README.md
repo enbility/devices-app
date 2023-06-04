@@ -31,7 +31,7 @@ The service requires a certificate and a key which will be created automatically
 
 - `make ui` for creating the UI assets
 - `make build` for building the binary for the local system
-- execute the binary with `./desktop-app`
+- execute the binary with `./devices-app`
 - Open the website in a browser at `http://localhost:7050/`
 
 ## Usage
