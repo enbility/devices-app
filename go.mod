@@ -3,16 +3,16 @@ module github.com/enbility/devices-app
 go 1.20
 
 require (
-	github.com/enbility/eebus-go v0.0.0-20230530145127-2617279392f4
+	github.com/enbility/eebus-go v0.0.0-20230702130107-cb72f48f04a1
 	github.com/gorilla/websocket v1.5.0
 )
 
 require (
+	github.com/DerAndereAndi/zeroconf/v2 v2.0.0-20230702124214-98a3b1bb316f // indirect
 	github.com/ahmetb/go-linq/v3 v3.2.0 // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/holoplot/go-avahi v1.0.1 // indirect
-	github.com/libp2p/zeroconf/v2 v2.2.0 // indirect
 	github.com/miekg/dns v1.1.52 // indirect
 	github.com/rickb777/date v1.20.1 // indirect
 	github.com/rickb777/plural v1.4.1 // indirect
