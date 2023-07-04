@@ -1,6 +1,6 @@
 <script setup>
 import imageUrl from '../assets/logo_white.svg'
-</script >
+</script>
 <template>
   <nav
     class="navbar is-fresh is-transparent no-shadow"
