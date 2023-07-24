@@ -3,7 +3,7 @@ module github.com/enbility/devices-app
 go 1.20
 
 require (
-	github.com/enbility/eebus-go v0.0.0-20230702130107-cb72f48f04a1
+	github.com/enbility/eebus-go v0.0.0-20230718081141-85b135042861
 	github.com/gorilla/websocket v1.5.0
 )
 
