@@ -164,7 +164,7 @@ import imageUrl from '../assets/logo_white.svg'
             </p>
             <button
               class="button is-primary"
-              @click="pairService(this.visibleServiceSki)"
+              @click="pairService(visibleServiceSki)"
             >
               Start Pairing Process
             </button>
@@ -184,7 +184,7 @@ import imageUrl from '../assets/logo_white.svg'
             </div>
             <button
               class="button is-primary"
-              @click="pairService(this.visibleServiceSki)"
+              @click="pairService(visibleServiceSki)"
             >
               Start Pairing Process
             </button>
@@ -197,7 +197,7 @@ import imageUrl from '../assets/logo_white.svg'
             <p>
               Pairing is in progress ...
             </p>
-            <button class="button is-warning" @click="abortConnection(this.visibleServiceSki)">
+            <button class="button is-warning" @click="abortConnection(visibleServiceSki)">
               Cancel Pairing Process
             </button>
           </div>
@@ -221,7 +221,7 @@ import imageUrl from '../assets/logo_white.svg'
             <div class="has-text-centered">
               <button
                 class="button is-primary"
-                @click="pairService(this.visibleServiceSki)"
+                @click="pairService(visibleServiceSki)"
               >
                 Start Pairing Process
               </button>
@@ -298,7 +298,6 @@ export default {
 
     currentTab() {
       if (this.visibleServiceSki === null) {
-        console.log('return 1')
         return 1;
       }
 
