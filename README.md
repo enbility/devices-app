@@ -20,6 +20,7 @@ The service requires a certificate and a key which will be created automatically
 
 ### Running the server component
 
+- `make ui` for creating the UI assets
 - `go run main.go -h` to see all the possible parameters.
 - `go run main.go` to start with the default parameters.
 
