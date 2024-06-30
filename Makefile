@@ -10,4 +10,4 @@ build::
 	go build
 
 snapshot::
-	goreleaser --snapshot --skip-publish --clean
+	goreleaser --snapshot --clean
