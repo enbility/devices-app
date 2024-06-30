@@ -16,8 +16,11 @@ import (
 	"sync"
 	"time"
 
+	"github.com/enbility/eebus-go/api"
 	"github.com/enbility/eebus-go/service"
-	"github.com/enbility/eebus-go/spine/model"
+	shipapi "github.com/enbility/ship-go/api"
+	"github.com/enbility/ship-go/cert"
+	"github.com/enbility/spine-go/model"
 )
 
 const (
@@ -28,9 +31,9 @@ type Cem struct {
 	mux         sync.Mutex
 	servicesMux sync.Mutex
 
-	eebusService *service.EEBUSService
+	eebusService *service.Service
 
-	currentRemoteServices []service.RemoteService
+	currentRemoteServices []shipapi.RemoteService
 
 	servicesList []*ServiceItem
 
@@ -55,7 +58,7 @@ func NewHems() *Cem {
 }
 
 func (c *Cem) createCertificate(certPath, keyPath string) (tls.Certificate, error) {
-	certificate, err := service.CreateCertificate("Demo", "Demo", "DE", "Demo-Unit-01")
+	certificate, err := cert.CreateCertificate("Demo", "Demo", "DE", "Demo-Unit-01")
 	if err != nil {
 		return tls.Certificate{}, err
 	}
@@ -119,12 +122,16 @@ func (c *Cem) Run() {
 	if len(os.Args) > 5 {
 		serial = os.Args[5]
 	}
-	eebusConfiguration, err := service.NewConfiguration("EnbilityNet", "EnbilityNet", "Devices-App", serial, model.DeviceTypeTypeEnergyManagementSystem, portEEBUS, certificate, 230)
+	eebusConfiguration, err := api.NewConfiguration(
+		"EnbilityNet", "EnbilityNet", "Devices-App",
+		serial, model.DeviceTypeTypeEnergyManagementSystem,
+		[]model.EntityTypeType{model.EntityTypeTypeCEM},
+		portEEBUS, certificate, 230, time.Second*4)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	c.eebusService = service.NewEEBUSService(eebusConfiguration, c)
+	c.eebusService = service.NewService(eebusConfiguration, c)
 	c.eebusService.SetLogging(c)
 
 	if err = c.eebusService.Setup(); err != nil {
@@ -133,7 +140,6 @@ func (c *Cem) Run() {
 	}
 
 	c.eebusService.Start()
-	c.eebusService.StartBrowseMdnsEntries()
 }
 
 func (c *Cem) AddConnection(conn *Connection) {
@@ -163,9 +169,9 @@ func (c *Cem) handleMessage(conn *Connection, message []byte) {
 	case MessageNameServicesList:
 		c.sendServicesList(conn)
 	case MessageNamePair:
-		c.eebusService.InitiatePairingWithSKI(msg.Ski)
+		c.eebusService.RegisterRemoteSKI(msg.Ski)
 	case MessageNameUnpair:
-		c.eebusService.RegisterRemoteSKI(msg.Ski, false)
+		c.eebusService.UnregisterRemoteSKI(msg.Ski)
 	case MessageNameAbort:
 		c.eebusService.CancelPairingWithSKI(msg.Ski)
 	case MessageNameAllowRemote:
@@ -218,7 +224,7 @@ func (c *Cem) updateServicesList() {
 
 	// add the local service first
 	localService := &ServiceItem{
-		Ski:    c.eebusService.LocalService.SKI,
+		Ski:    c.eebusService.LocalService().SKI(),
 		Brand:  "Enbility.net",
 		Model:  "Devices App",
 		Itself: true,
@@ -228,23 +234,23 @@ func (c *Cem) updateServicesList() {
 	// add the mDNS records
 	for _, element := range c.currentRemoteServices {
 		service := c.eebusService.RemoteServiceForSKI(element.Ski)
-		detail := service.ConnectionStateDetail
+		detail := service.ConnectionStateDetail()
 
 		stateError := ""
-		if detail.Error != nil {
-			stateError = detail.Error.Error()
+		if detail.Error() != nil {
+			stateError = detail.Error().Error()
 		}
 
 		newService := &ServiceItem{
 			Ski:        element.Ski,
-			Trusted:    service.Trusted,
-			State:      detail.State,
+			Trusted:    service.Trusted(),
+			State:      detail.State(),
 			StateError: stateError,
 			Brand:      element.Brand,
 			Model:      element.Model,
 		}
 
-		if service.Trusted {
+		if service.Trusted() {
 			if data, ok := c.discoveryData[element.Ski]; ok {
 				newService.Discovery = data
 			}
@@ -278,15 +284,15 @@ func (c *Cem) updateServicesList() {
 
 // EEBUSServiceHandler
 
-func (c *Cem) RemoteSKIConnected(service *service.EEBUSService, ski string) {}
+func (c *Cem) RemoteSKIConnected(service api.ServiceInterface, ski string) {}
 
-func (c *Cem) RemoteSKIDisconnected(service *service.EEBUSService, ski string) {
+func (c *Cem) RemoteSKIDisconnected(service api.ServiceInterface, ski string) {
 	c.updateServicesList()
 
 	c.broadcastServicesList()
 }
 
-func (c *Cem) VisibleRemoteServicesUpdated(service *service.EEBUSService, entries []service.RemoteService) {
+func (c *Cem) VisibleRemoteServicesUpdated(service api.ServiceInterface, entries []shipapi.RemoteService) {
 	c.currentRemoteServices = entries
 
 	c.updateServicesList()
@@ -296,10 +302,10 @@ func (c *Cem) VisibleRemoteServicesUpdated(service *service.EEBUSService, entrie
 
 func (c *Cem) ServiceShipIDUpdate(ski string, shipdID string) {}
 
-func (c *Cem) ServicePairingDetailUpdate(ski string, detail service.ConnectionStateDetail) {
+func (c *Cem) ServicePairingDetailUpdate(ski string, detail *shipapi.ConnectionStateDetail) {
 	// if accepted from both ends, we need to persist this
-	if detail.State == service.ConnectionStateTrusted {
-		c.eebusService.RegisterRemoteSKI(ski, true)
+	if detail.State() == shipapi.ConnectionStateTrusted {
+		c.eebusService.RegisterRemoteSKI(ski)
 	}
 
 	c.updateServicesList()
@@ -374,7 +380,7 @@ func (c *Cem) filterSpineLogs(msg string) {
 	}
 
 	ski := parts[1]
-	var msgService service.RemoteService
+	var msgService shipapi.RemoteService
 
 	c.servicesMux.Lock()
 	for _, service := range c.currentRemoteServices {
@@ -390,14 +396,16 @@ func (c *Cem) filterSpineLogs(msg string) {
 	}
 
 	// discovery data
-	if strings.Contains(msg, "{\"payload\":[{\"cmd\":[[{\"nodeManagementDetailedDiscoveryData\":") {
+	if strings.Contains(msg, "{\"payload\":[{\"cmd\":[[{\"nodeManagementDetailedDiscoveryData\":") &&
+		!strings.Contains(msg, "{\"nodeManagementDetailedDiscoveryData\":[]") {
 		c.discoveryData[ski] = parts[2]
 		c.broadcastServicesList()
 		return
 	}
 
 	// usecase data
-	if strings.Contains(msg, "{\"payload\":[{\"cmd\":[[{\"nodeManagementUseCaseData\":") {
+	if strings.Contains(msg, "{\"payload\":[{\"cmd\":[[{\"nodeManagementUseCaseData\":") &&
+		!strings.Contains(msg, "{\"nodeManagementUseCaseData\":[]") {
 		c.usecaseData[ski] = parts[2]
 		c.broadcastServicesList()
 		return

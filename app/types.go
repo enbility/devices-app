@@ -1,13 +1,13 @@
 package app
 
 import (
-	"github.com/enbility/eebus-go/service"
+	shipapi "github.com/enbility/ship-go/api"
 )
 
 type ServiceItem struct {
 	Ski        string                  `json:"ski"`       // the services ski
 	Trusted    bool                    `json:"trusted"`   // if the service is already trusted
-	State      service.ConnectionState `json:"state"`     // the connection state
+	State      shipapi.ConnectionState `json:"state"`     // the connection state
 	StateError string                  `json:"error"`     // the connection error message if in error state
 	Brand      string                  `json:"brand"`     // the services brand string
 	Model      string                  `json:"model"`     // the services model string
