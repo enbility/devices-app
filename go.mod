@@ -5,9 +5,9 @@ go 1.21.1
 toolchain go1.22.3
 
 require (
-	github.com/enbility/eebus-go v0.6.0
-	github.com/enbility/ship-go v0.5.1
-	github.com/enbility/spine-go v0.6.0
+	github.com/enbility/eebus-go v0.6.1
+	github.com/enbility/ship-go v0.5.2
+	github.com/enbility/spine-go v0.6.1
 	github.com/gorilla/websocket v1.5.3
 )
 

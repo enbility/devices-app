@@ -126,7 +126,7 @@ func (c *Cem) Run() {
 		"EnbilityNet", "EnbilityNet", "Devices-App",
 		serial, model.DeviceTypeTypeEnergyManagementSystem,
 		[]model.EntityTypeType{model.EntityTypeTypeCEM},
-		portEEBUS, certificate, 230, time.Second*4)
+		portEEBUS, certificate, time.Second*4)
 	if err != nil {
 		log.Fatal(err)
 	}
