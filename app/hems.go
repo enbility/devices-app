@@ -371,7 +371,7 @@ func (c *Cem) printFormat(msgType, format string, args ...interface{}) {
 // filter out UseCase and DetailedDiscovery
 func (c *Cem) filterSpineLogs(msg string) {
 	parts := strings.Split(msg, " ")
-	if len(parts) != 3 {
+	if len(parts) < 3 {
 		return
 	}
 
@@ -394,11 +394,11 @@ func (c *Cem) filterSpineLogs(msg string) {
 	if len(msgService.Ski) == 0 {
 		return
 	}
-
+	payload := strings.Join(parts[2:], " ")
 	// discovery data
 	if strings.Contains(msg, "{\"payload\":[{\"cmd\":[[{\"nodeManagementDetailedDiscoveryData\":") &&
 		!strings.Contains(msg, "{\"nodeManagementDetailedDiscoveryData\":[]") {
-		c.discoveryData[ski] = parts[2]
+		c.discoveryData[ski] = payload
 		c.broadcastServicesList()
 		return
 	}
@@ -406,7 +406,7 @@ func (c *Cem) filterSpineLogs(msg string) {
 	// usecase data
 	if strings.Contains(msg, "{\"payload\":[{\"cmd\":[[{\"nodeManagementUseCaseData\":") &&
 		!strings.Contains(msg, "{\"nodeManagementUseCaseData\":[]") {
-		c.usecaseData[ski] = parts[2]
+		c.usecaseData[ski] = payload
 		c.broadcastServicesList()
 		return
 	}
